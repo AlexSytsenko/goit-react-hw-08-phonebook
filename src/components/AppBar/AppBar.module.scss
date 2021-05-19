@@ -1,0 +1,11 @@
+@import 'styles/shared';
+
+
+.header {
+  margin: 0 auto;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $form-button-color;
+}

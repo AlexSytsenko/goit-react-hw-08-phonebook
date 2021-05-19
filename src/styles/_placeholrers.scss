@@ -1,0 +1,33 @@
+%list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+%button {
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+  margin: 0 auto;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  color: inherit;
+  background-color: $form-button-color;
+  transition: $timing-function;
+}
+
+%label {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+%input {
+  min-width: 260px;
+  max-width: 400px;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
