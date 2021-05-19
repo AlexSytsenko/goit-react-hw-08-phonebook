@@ -1,12 +1,11 @@
 import { Switch } from 'react-router-dom';
-import { Component, Suspense, lazy } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import routes from './helpers/routes';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import PropTypes from 'prop-types';
 
 import './styles/container.scss';
 import AppBar from './components/AppBar';
@@ -28,14 +27,15 @@ const RegisterView = lazy(() =>
   import('./views/RegisterView' /* webpackChunkName: "Register-page" */),
 );
 
-class App extends Component {
-  componentDidMount() {
-    this.props.onGetCurrentUser();
-  }
+const App = () => {
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectors.getIsLoading);
 
-  render() {
-    const { isLoading } = this.props;
-    return (
+  useEffect(() => {
+    dispatch(authOperations.getCurrentUser());
+  }, [dispatch]);
+
+return (
       <>
         <AppBar />
         <ToastContainer />
@@ -72,20 +72,6 @@ class App extends Component {
         </div>
       </>
     );
-  }
 }
 
-App.propTypes = {
-  onGetCurrentUser: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = state => ({
-  isLoading: selectors.getIsLoading(state),
-});
-
-const mapDispatchToProps = {
-  onGetCurrentUser: authOperations.getCurrentUser,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
