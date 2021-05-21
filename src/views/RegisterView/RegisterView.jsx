@@ -1,90 +1,99 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import authOperations from '../../redux/auth/auth-operations';
 import styles from './RegisterView.module.scss';
 
-class RegisterView extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
+
+const RegisterView = () => {
+  const dispatch = useDispatch();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  const handleChange = e => {
+    const { name, value } = e.currentTarget;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      
+      case 'email':
+        setEmail(value);
+        break;
+
+      case 'password':
+        setPassword(value);
+        break;
+
+      default:
+        break;
+    }
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    this.props.onRegister(this.state);
-
-    this.setState({ name: '', email: '', password: '' });
+    dispatch(authOperations.register({ name, email, password }));
+    reset();
   };
 
-  render() {
-    const { name, email, password } = this.state;
+  const reset = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+  };
 
-    return (
-      <div>
-        <h1 className={styles.title}>Registration page</h1>
+  return (
+    <div>
+      <h1 className={styles.title}>Registration page</h1>
 
-        <form
-          onSubmit={this.handleSubmit}
-          className={styles.form}
-          autoComplete="off"
-        >
-          <label className={styles.label}>
-            Name
-            <input
-              className={styles.input}
-              type="text"
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-            />
-          </label>
+      <form
+        onSubmit={handleSubmit}
+        className={styles.form}
+        autoComplete="off"
+      >
+        <label className={styles.label}>
+          Name
+          <input
+            className={styles.input}
+            type="text"
+            name="name"
+            value={name}
+            onChange={handleChange}
+          />
+        </label>
 
-          <label className={styles.label}>
-            Email
-            <input
-              className={styles.input}
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-          </label>
+        <label className={styles.label}>
+          Email
+          <input
+            className={styles.input}
+            type="email"
+            name="email"
+            value={email}
+            onChange={handleChange}
+          />
+        </label>
 
-          <label className={styles.label}>
-            Password
-            <input
-              className={styles.input}
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-          </label>
+        <label className={styles.label}>
+          Password
+          <input
+            className={styles.input}
+            type="password"
+            name="password"
+            value={password}
+            onChange={handleChange}
+          />
+        </label>
 
-          <button type="submit" className={styles.button}>
-            Register new user
-          </button>
-        </form>
-      </div>
-    );
-  }
-}
-
-RegisterView.propTypes = {
-  onRegister: PropTypes.func.isRequired,
+        <button type="submit" className={styles.button}>
+          Register new user
+        </button>
+      </form>
+    </div>
+  );
 };
 
-const mapDispatchToProps = {
-  onRegister: authOperations.register,
-  //Тоже самое что: onRegister: (data) => dispatch(authOperations.register(data));
-};
+export default RegisterView;
 
-export default connect(null, mapDispatchToProps)(RegisterView);
