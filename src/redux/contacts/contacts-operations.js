@@ -50,3 +50,5 @@ export const deleteContact = contactId => async dispatch => {
     dispatch(deleteContactError(error.message));
   }
 };
+
+export default { fetchContacts, addContact, deleteContact };
