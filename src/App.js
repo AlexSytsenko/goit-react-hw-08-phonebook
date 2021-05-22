@@ -35,43 +35,49 @@ const App = () => {
     dispatch(authOperations.getCurrentUser());
   }, [dispatch]);
 
-return (
-      <>
-        <AppBar />
-        <ToastContainer />
-        <div className="container">
-          {isLoading && (
+  return (
+    <>
+      <AppBar />
+      <ToastContainer />
+      <div className="container">
+        {isLoading && (
+          <Loader type="Puff" color="#C48613" height={75} width={75} />
+        )}
+        <Suspense
+          fallback={
             <Loader type="Puff" color="#C48613" height={75} width={75} />
-          )}
-          <Suspense
-            fallback={
-              <Loader type="Puff" color="#C48613" height={75} width={75} />
-            }
-          >
-            <Switch>
-              <PublicRouter exact path={routes.home} component={HomeView} />
-              <PublicRouter
-                path={routes.register}
-                restricted
-                redirectTo={routes.contacts}
-                component={RegisterView}
-              />
-              <PublicRouter
-                path={routes.login}
-                restricted
-                redirectTo={routes.contacts}
-                component={LoginView}
-              />
-              <PrivateRoute
-                path={routes.home}
-                component={ContactsView}
-                redirectTo={routes.login}
-              />
-            </Switch>
-          </Suspense>
-        </div>
-      </>
-    );
-}
+          }
+        >
+          <Switch>
+            <PublicRouter exact path={routes.home}>
+              <HomeView />
+            </PublicRouter>
+
+            <PublicRouter
+              path={routes.register}
+              restricted
+              redirectTo={routes.contacts}
+            >
+              <RegisterView />
+            </PublicRouter>
+            <PublicRouter
+              path={routes.login}
+              restricted
+              redirectTo={routes.contacts}
+            >
+              <LoginView />
+            </PublicRouter>
+            <PrivateRoute
+              path={routes.home}
+              redirectTo={routes.login}
+            >
+              <ContactsView />
+              </PrivateRoute>
+          </Switch>
+        </Suspense>
+      </div>
+    </>
+  );
+};
 
 export default App;

@@ -39,3 +39,4 @@ ContactsItem.propTypes = {
 };
 
 export default ContactsItem;
+

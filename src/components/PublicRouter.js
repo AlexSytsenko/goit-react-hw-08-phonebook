@@ -1,31 +1,26 @@
 import { Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import authSelectors from '../redux/auth/auth-selectors';
-
 
 /**
  * - Если маршрут ограниченный, и пользователь залогинен, рендерит редирект на /contacts
  * - В противном случае рендерит компонент
  */
-const PublicRoute = ({
-  component: Component,
-  isAuthenticated,
-  redirectTo,
-  ...routeProps
-}) => (
-  <Route
-    {...routeProps}
-    render={props =>
-      isAuthenticated && routeProps.restricted ? (
+const PublicRoute = ({ redirectTo, children, ...routeProps }) => {
+  const isAuthenticated = useSelector(authSelectors.getIsAuthenticated);
+
+  return (
+    <Route {...routeProps}>
+      {isAuthenticated && routeProps.restricted ? (
         <Redirect to={redirectTo} />
       ) : (
-        <Component {...props} />
-      )
-    }
-  />
-);
+        children
+      )}
+    </Route>
+  );
+};
 
 PublicRoute.defaultProps = {
   redirectTo: null,
@@ -33,14 +28,9 @@ PublicRoute.defaultProps = {
 };
 
 PublicRoute.propTypes = {
-  component: PropTypes.elementType.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
   redirectTo: PropTypes.string,
   routeProps: PropTypes.any,
+  children: PropTypes.element.isRequired,
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: authSelectors.getIsAuthenticated(state),
-});
-
-export default connect(mapStateToProps)(PublicRoute);
+export default PublicRoute;

@@ -1,5 +1,5 @@
 import { Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import authSelectors from '../redux/auth/auth-selectors';
@@ -8,29 +8,23 @@ import authSelectors from '../redux/auth/auth-selectors';
  * - Если маршрут приватный и пользователь залогинен, рендерит компонент
  * - В противном случае рендерит Redirect на /login
  */
-const PrivateRoute = ({
-  component: Component,
-  isAuthenticated,
-  redirectTo,
-  ...routeProps
-}) => (
-  <Route
-    {...routeProps}
-    render={props =>
-      isAuthenticated ? <Component {...props} /> : <Redirect to={redirectTo} />
-    }
-  />
-);
-
-PrivateRoute.propTypes = {
-  component: PropTypes.elementType.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
-  redirectTo: PropTypes.string.isRequired,
-  routeProps: PropTypes.any,
+const PrivateRoute = ({ redirectTo, children, ...routeProps }) => {
+  const isAuthenticated = useSelector(authSelectors.getIsAuthenticated);
+  return (
+    <Route {...routeProps}>
+      {isAuthenticated ? children : <Redirect to={redirectTo} />}
+    </Route>
+  );
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: authSelectors.getIsAuthenticated(state),
-});
+PrivateRoute.defaultProps = {
+  routeProps: null,
+};
 
-export default connect(mapStateToProps)(PrivateRoute);
+PrivateRoute.propTypes = {
+  redirectTo: PropTypes.string.isRequired,
+  routeProps: PropTypes.any,
+  children: PropTypes.element.isRequired,
+};
+
+export default PrivateRoute;
