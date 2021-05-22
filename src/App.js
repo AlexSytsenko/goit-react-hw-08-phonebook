@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/container.scss';
 import AppBar from './components/AppBar';
 import authOperations from './redux/auth/auth-operations';
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/PrivateRouter';
 import PublicRouter from './components/PublicRouter';
 import selectors from './redux/auth/auth-selectors';
 
